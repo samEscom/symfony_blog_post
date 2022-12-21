@@ -23,6 +23,11 @@ class BlogPostRepository extends ServiceEntityRepository
 
     public function save(BlogPost $entity, bool $flush = false): void
     {
+
+        if($entity->getPublished() == NULL){
+            $entity->setPublished(new \DateTime());
+        }
+
         $this->getEntityManager()->persist($entity);
 
         if ($flush) {
