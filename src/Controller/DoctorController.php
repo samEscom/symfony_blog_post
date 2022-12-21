@@ -6,9 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/doctor', name: 'app_doctor')]
 class DoctorController extends AbstractController
 {
-    #[Route('/doctor', name: 'app_doctor')]
+    #[Route('/', name: 'app_doctor_info')]
     public function index(): JsonResponse
     {
         return $this->json([
@@ -17,7 +18,7 @@ class DoctorController extends AbstractController
         ]);
     }
 
-    #[Route('/doctor/{doctor_name}', name: 'app_doctor_hello')]
+    #[Route('/{doctor_name}', name: 'app_doctor_hello')]
     public function hello_doctor($doctor_name): JsonResponse
     {
         return $this->json([
