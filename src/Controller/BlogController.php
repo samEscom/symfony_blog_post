@@ -18,13 +18,18 @@ use Doctrine\Persistence\ManagerRegistry;
 #[Route('/blog', name: 'app_blog')]
 class BlogController extends AbstractController
 {
+
+    public function __construct(ManagerRegistry $registry)
+    {
+        $this->registry = $registry;
+        $this->repository = new BlogPostRepository($this->registry);
+    }
+
     #[Route('/', name: 'app_blog_info')]
     public function index(): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/DoctorController.php',
-        ]);
+        $data = $this->repository->findAll();
+        return $this->json($data);
     }
 
     #[Route('/post/{slug}', name: 'app_blog_hello')]
@@ -37,7 +42,7 @@ class BlogController extends AbstractController
     }
 
     #[Route('/add', name: 'app_blog_add_post', methods:['POST'])]
-    public function addPost(Request $request, ManagerRegistry $doctrine): JsonResponse
+    public function addPost(Request $request): JsonResponse
     {   
         $encoders = [new XmlEncoder(), new JsonEncoder()];
         $normalizers = [new ObjectNormalizer()];
@@ -45,8 +50,8 @@ class BlogController extends AbstractController
         $serializer = new Serializer($normalizers, $encoders);
 
         $blogPost = $serializer->deserialize($request->getContent(), BlogPost::class, 'json');
-        $repository = new BlogPostRepository($doctrine);
-        $repository->save($blogPost, TRUE);
+        
+        $this->repository->save($blogPost, TRUE);
         return $this->json($blogPost);
 
     }
