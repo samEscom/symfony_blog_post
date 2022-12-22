@@ -36,8 +36,7 @@ class BlogController extends AbstractController
     public function postBySlug($slug): JsonResponse
     {
         return $this->json([
-            'message' => 'Welcome to your new controller!'.$slug,
-            'path' => 'src/Controller/DoctorController.php',
+            'slug' => $slug,
         ]);
     }
 
